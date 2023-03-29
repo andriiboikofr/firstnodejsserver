@@ -1,8 +1,11 @@
 import express from "express";
 import { Post } from "tsoa";
+import JWT from "../middleware/JWT";
 import PostController from "../controllers/post.controller";
 
 const router=express.Router();
+
+router.use([JWT.authenticateJWT])
 
 router.get("/", async (_req,res)=>{
     const controller = new PostController();
@@ -30,7 +33,7 @@ router.post("/delete", async(req,res)=>{
     return res.send(response);
 });
 
-router.post("/update", async(req,res)=>{
+router.use([JWT.checkOwnership]).post("/update", async(req,res)=>{
     const controller= new PostController();
     const response=await controller.updatePost(req.body)
     if(!response) res.status(404).send({message:"Post not Found"});

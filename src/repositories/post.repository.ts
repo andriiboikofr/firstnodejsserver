@@ -30,6 +30,7 @@ export const getPost=async (id:number): Promise<Post | null>=>{
     const postRepository=appDataSource.getRepository(Post);
     const post= await postRepository.findOneBy({id:id});
     if(!post) return null;
+    console.log("The post in the actual methode=>",post)
     return post;
 };
 

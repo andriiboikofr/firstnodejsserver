@@ -1,4 +1,4 @@
-import { Get, Route, Tags, Post, Body, Path } from "tsoa";
+import { Get, Route, Tags, Post, Body, Path, Header } from "tsoa";
 import { User } from "../models";
 import {
   getUsers,
@@ -29,7 +29,7 @@ export default class UserController {
   }
 
   @Post("/delete")
-  public async deleteUser(@Body() id: number): Promise<User | null>{
+  public async deleteUser(@Body() id: number): Promise<number | null>{
     return deleteUser(Number(id));
   }
 

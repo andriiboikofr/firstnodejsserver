@@ -40,10 +40,14 @@ export const getUserByEmail = async (email: string): Promise<User | null> =>{
   return user
 }
 
-export const deleteUser= async (id: number): Promise<User | null>=>{
+export const deleteUser= async (id: number)=>{
   console.log("Number was passed to Delete User", id)
   const userRepository=appDataSource.getRepository(User);
-  const user = await userRepository.delete({id:id});
+  const user=await userRepository.findOneBy({id:id});
+  if (user){
+    const user = await userRepository.delete({id:id});
+    return id
+  }
   return null;
 }
 
