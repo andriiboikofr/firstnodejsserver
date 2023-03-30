@@ -38,7 +38,7 @@ class JWT {
     }
   }
 
-  adminRightsCheck(req: Request, res: Response, next: NextFunction) {
+  adminRightsCheck= async (req: Request, res: Response, next: NextFunction) =>{
     const authHeader = req.headers.authorization;
     console.log("Admin Rights Check has been initiated.");
     if (authHeader && authHeader !== "null") {
@@ -46,9 +46,10 @@ class JWT {
       console.log("auth Header", JWT_KEY);
       console.log("The actual header", authHeader);
       console.log(typeof jwt.decode(authHeader));
-      let userRole = jwt.decode(authHeader) as JWT_token_payload;
-      console.log("user data is =>", userRole);
-      if (userRole["role"] != "admin") {
+      let payload = jwt.decode(authHeader) as JWT_token_payload;
+      let user= await getUserById(payload.id) as unknown as User;
+      console.log("User role is =>", user.role);
+      if (user["role"] !== "admin") {
         return res
           .status(401)
           .send({ success: false, message: "Not enough rights" });

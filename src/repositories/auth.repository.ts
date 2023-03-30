@@ -36,8 +36,7 @@ export const logIn=async(payload: ILoginPayload)=>{
         } else {
             let userInfo={
                 "id": user.id,
-                "email":payload.email,
-                "role": user.role
+                "email":payload.email
             }
             log("jwt Secret", jwtSecret)
             const token=jwt.sign(userInfo, jwtSecret,{expiresIn: tokenExpirationInSeconds});
