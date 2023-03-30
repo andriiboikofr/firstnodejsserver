@@ -38,7 +38,7 @@ class JWT {
     }
   }
 
-  async adminRightsCheck(req: Request, res: Response, next: NextFunction) {
+  adminRightsCheck(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
     console.log("Admin Rights Check has been initiated.");
     if (authHeader && authHeader !== "null") {
@@ -57,16 +57,26 @@ class JWT {
     }
   }
 
-  async checkOwnership(req: Request, res: Response, next: NextFunction) {
+  getUserId(req: Request){
+    let user: JWT_token_payload;
+    const authHeader = req.headers.authorization;
+    console.log("Admin Rights Check has been initiated.");
+    if (authHeader && authHeader !== "null") {
+      user=jwt.decode(authHeader) as JWT_token_payload;
+    }
+    return user!.id;
+  }
+
+  checkOwnership = async (req: Request, res: Response, next: NextFunction)=> {
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader !== "null") {
       let requesterData: any;
       console.log(req.baseUrl);
-      if (req.baseUrl == "/users") {
+      if (req.baseUrl === "/users") {
         let requesterData = jwt.decode(authHeader) as JWT_token_payload;
         console.log("User ID: ", req.body.id);
         console.log("Requester Id: ", requesterData.id);
-        if (requesterData.id == Number(req.body.id)) {
+        if (requesterData.id === Number(req.body.id)) {
           console.log("The Ids are same. YAY!");
           next();
         } else {
@@ -100,10 +110,10 @@ class JWT {
         requesterData = jwt.decode(authHeader) as JWT_token_payload;
         console.log("Entity UserID: ", entityOwnerId);
         console.log("Requester Id: ", requesterData.id);
-        if (requesterData.id != entityOwnerId) {
+        if (requesterData.id !== entityOwnerId) {
           console.log("Moved to admin Rights Check");
           console.log("That's the Next function", next);
-          await this.adminRightsCheck(req, res, next).catch((result)=>console.log(result));
+          this.adminRightsCheck(req, res, next);
         } else {
           console.log("The Ids are same. YAY!");
           next();

@@ -20,6 +20,7 @@ export default class CommentController {
 
   @Post("/")
   public async createComment(@Body() body: ICommentPayload): Promise<Comment> {
+    //body.userId=userId;
     return createComment(body);
   }
 
@@ -35,6 +36,7 @@ export default class CommentController {
 
   @Post("/update")
   public async updateComment(@Body() body: IExistingCommentPayload): Promise<Comment | null>{
+    //body.userId=userId;
     return updateComment(body);
   }
 }

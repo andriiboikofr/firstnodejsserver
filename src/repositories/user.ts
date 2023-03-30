@@ -1,5 +1,6 @@
 import { User } from "../models";
 import appDataSource from "../";
+import getUserId from "../middleware/JWT";
 
 export interface IUserPayload {
   firstName: string;

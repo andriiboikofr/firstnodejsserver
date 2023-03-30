@@ -63,7 +63,7 @@ export const signUp=async(payload: ISignUpPayload)=>{
         if (user){
             throw new Error("User Already Exists");
         }
-        if (password != password2) {
+        if (password !== password2) {
             throw new Error("The Passwords don't match");
         } else {
             try{

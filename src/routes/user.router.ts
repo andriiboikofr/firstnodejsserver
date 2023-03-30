@@ -4,7 +4,7 @@ import UserController from "../controllers/user.controller";
 
 const router = express.Router();
 
-router.use([JWT.authenticateJWT, JWT.checkOwnership ,JWT.adminRightsCheck])
+router.use([JWT.authenticateJWT])
 
 router.get("/", async (_req, res) => {
   const controller = new UserController();
@@ -18,14 +18,14 @@ router.post("/", async (req, res) => {
   return res.status(201).send({success: true, result:response});
 });
 
-router.get("/:id", async (req, res) => {
+router.use([JWT.checkOwnership]).get("/:id", async (req, res) => {
     const controller = new UserController();
     const response = await controller.getUserById(req.params.id);
     if (!response) res.status(404).send({ message: "No user found" });
     return res.status(200).send({success:true, result:response});
   });
 
-  router.post("/delete", async (req, res) => {
+  router.use([JWT.checkOwnership]).post("/delete", async (req, res) => {
     const controller = new UserController();
     console.log("The body of the request",req.body)
     const response = await controller.deleteUser(req.body.id);
@@ -33,7 +33,7 @@ router.get("/:id", async (req, res) => {
     return res.status(404).send({success:false, message:"No user was found"});
   });
 
-  router.post("/update", async (req,res)=>{
+  router.use([JWT.checkOwnership]).post("/update", async (req,res)=>{
     const controller = new UserController();
     const response = await controller.updateUser(req.body);
     if (!response) res.status(404).send({success: false, message:"User not found"});

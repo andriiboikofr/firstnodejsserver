@@ -3,8 +3,8 @@ import {Comment} from "../models";
 
 export interface ICommentPayload{
     content: string;
-    userId: number;
     postId: number;
+    userId: number;
 }
 
 export interface IExistingCommentPayload extends ICommentPayload{

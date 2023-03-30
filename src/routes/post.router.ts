@@ -22,20 +22,26 @@ router.get("/:id", async (req,res)=>{
 
 router.post("/", async(req,res)=>{
     const controller=new PostController();
-    const response= await controller.createPost(req.body)
+    let userId= JWT.getUserId(req);
+    let payload=req.body;
+    payload.userId=userId;
+    const response= await controller.createPost(payload);
     return res.send(response);
 });
 
-router.post("/delete", async(req,res)=>{
+router.use(JWT.checkOwnership).post("/delete", async(req,res)=>{
     const controller = new PostController();
-    const response= await controller.deletePost(req.body.id)
+    const response= await controller.deletePost(req.body.id);
     if(!response) res.status(204).send({message:"No more Post"});
     return res.send(response);
 });
 
 router.use([JWT.checkOwnership]).post("/update", async(req,res)=>{
     const controller= new PostController();
-    const response=await controller.updatePost(req.body)
+    let userId= JWT.getUserId(req);
+    let payload=req.body;
+    payload.userId=userId;
+    const response=await controller.updatePost(payload);
     if(!response) res.status(404).send({message:"Post not Found"});
     return res.send(response);
 });
